@@ -1,0 +1,82 @@
+# =============================================================================
+# TERRAFORM OUTPUTS - EXAMPLE WITH CONSOLE ACCESS
+# Shows important information after resources are created
+# This includes BOTH programmatic and console access credentials
+# =============================================================================
+
+# Basic user information
+output "user_name" {
+  description = "Name of the created IAM user"
+  value       = aws_iam_user.readonly_user.name
+}
+
+output "user_arn" {
+  description = "ARN of the created IAM user"
+  value       = aws_iam_user.readonly_user.arn
+}
+
+# Programmatic access credentials (for CLI/API/SDK)
+output "access_key_id" {
+  description = "Access Key ID for programmatic access"
+  value       = aws_iam_access_key.readonly_user_key.id
+}
+
+output "secret_access_key" {
+  description = "Secret Access Key for programmatic access"
+  value       = aws_iam_access_key.readonly_user_key.secret
+  sensitive   = true
+}
+
+# Console access credentials (for web browser login)
+output "console_password" {
+  description = "Temporary console password (must be changed on first login)"
+  value       = aws_iam_user_login_profile.readonly_user_login.password
+  sensitive   = true
+}
+
+output "aws_console_login_url" {
+  description = "URL to login to AWS Console"
+  value       = "https://${data.aws_caller_identity.current.account_id}.signin.aws.amazon.com/console"
+}
+
+# Policy information
+output "policy_name" {
+  description = "Name of the S3 read-only policy"
+  value       = aws_iam_policy.s3_readonly_policy.name
+}
+
+output "policy_arn" {
+  description = "ARN of the S3 read-only policy"
+  value       = aws_iam_policy.s3_readonly_policy.arn
+}
+
+# =============================================================================
+# USAGE INSTRUCTIONS FOR CREDENTIALS:
+# =============================================================================
+
+# To get console password after apply:
+# terraform output console_password
+
+# To get secret access key after apply:
+# terraform output secret_access_key
+
+# Console Login Steps:
+# 1. Go to: https://[account-id].signin.aws.amazon.com/console
+# 2. Username: john-readonly (or your configured username)
+# 3. Password: [from terraform output console_password]
+# 4. Change password on first login (required)
+
+# CLI/API Setup:
+# aws configure
+# AWS Access Key ID: [from terraform output access_key_id]
+# AWS Secret Access Key: [from terraform output secret_access_key]
+# Default region: us-east-1
+# Default output format: json
+
+# Test Commands:
+# aws iam get-user --user-name john-readonly
+# aws s3 ls (should work - read access)
+# aws s3 cp file.txt s3://bucket-name/ (should fail - read-only)
+
+# Get current AWS account information
+data "aws_caller_identity" "current" {}
