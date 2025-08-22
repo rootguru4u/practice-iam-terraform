@@ -12,7 +12,7 @@ terraform {
     organization = "rootguru-infotech"  # Replace with your TFC organization
 
     workspaces {
-      name = "practice-iam-terraform"
+      name = "practice-iam-terraform" # practice-iam-terraform
     }
   }
 
