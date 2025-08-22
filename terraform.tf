@@ -9,7 +9,7 @@ terraform {
 
   # Configure Terraform Cloud as the backend for state management
   cloud {
-    organization = "your-organization-name"  # Replace with your TFC organization
+    organization = "rootguru-infotech"  # Replace with your TFC organization
 
     workspaces {
       name = "practice-iam-terraform"
